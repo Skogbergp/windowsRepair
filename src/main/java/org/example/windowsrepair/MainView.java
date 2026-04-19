@@ -11,13 +11,13 @@ public class MainView {
     private final VBox root;
     private final TextArea output;
 
+
     public MainView() {
         output = new TextArea();
         output.setEditable(false);
         output.setStyle("-fx-font-family: monospace;");
         VBox.setVgrow(output, Priority.ALWAYS);
 
-        // Status label bound to queue size
         Label statusLabel = new Label("Ready");
         statusLabel.textProperty().bind(
                 Bindings.when(CommandService.queueSize.greaterThan(0))
@@ -40,11 +40,20 @@ public class MainView {
 
     private Tab buildRepairTab() {
         FlowPane pane = buildPane();
+
+        Button reregisterBtn = new Button("Re-register Apps");
+        reregisterBtn.setPrefWidth(160);
+        reregisterBtn.setTooltip(new Tooltip("Re-registers all Windows apps, fixes crashes like Settings not opening"));
+        reregisterBtn.setOnAction(e -> {
+            String path = getClass().getClassLoader().getResource("reregister-apps.ps1").getPath();
+            CommandService.runPowershellScript(path, output);
+        });
+
         pane.getChildren().addAll(
-                buildButton("SFC Scan", "sfc /scannow", false, "Scans and repairs corrupted Windows system files"),
-                buildButton("DISM Repair", "DISM /Online /Cleanup-Image /RestoreHealth", false, "Repairs the Windows image, heavier fix than SFC"),
-                buildButton("Check Disk", "chkdsk C: /f /r", false, "Checks disk for errors and bad sectors, requires reboot"),
-                buildButton("Re-register Apps", "Get-AppXPackage -AllUsers | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register \"$($_.InstallLocation)\\AppXManifest.xml\"}", true, "Re-registers all Windows apps, fixes crashes like Settings not opening")
+                buildButton("SFC Scan", "sfc /scannow", "Scans and repairs corrupted Windows system files"),
+                buildButton("DISM Repair", "DISM /Online /Cleanup-Image /RestoreHealth", "Repairs the Windows image, heavier fix than SFC"),
+                buildButton("Check Disk", "chkdsk C: /f /r", "Checks disk for errors and bad sectors, requires reboot"),
+                reregisterBtn
         );
         return new Tab("Windows Repair", pane);
     }
@@ -52,12 +61,12 @@ public class MainView {
     private Tab buildNetworkTab() {
         FlowPane pane = buildPane();
         pane.getChildren().addAll(
-                buildButton("Flush DNS", "ipconfig /flushdns", false, "Clears DNS cache, fixes some website loading issues"),
-                buildButton("Reset Winsock", "netsh winsock reset", false, "Resets network stack, fixes various connection issues"),
-                buildButton("Reset TCP/IP", "netsh int ip reset", false, "Resets TCP/IP stack, fixes deeper network problems"),
-                buildButton("Release IP", "ipconfig /release", false, "Releases your current IP address"),
-                buildButton("Renew IP", "ipconfig /renew", false, "Requests a new IP address from the router"),
-                buildButton("Network Info", "ipconfig /all", false, "Shows all network adapter information")
+                buildButton("Flush DNS", "ipconfig /flushdns", "Clears DNS cache, fixes some website loading issues"),
+                buildButton("Reset Winsock", "netsh winsock reset", "Resets network stack, fixes various connection issues"),
+                buildButton("Reset TCP/IP", "netsh int ip reset", "Resets TCP/IP stack, fixes deeper network problems"),
+                buildButton("Release IP", "ipconfig /release", "Releases your current IP address"),
+                buildButton("Renew IP", "ipconfig /renew", "Requests a new IP address from the router"),
+                buildButton("Network Info", "ipconfig /all", "Shows all network adapter information")
         );
         return new Tab("Network", pane);
     }
@@ -65,10 +74,10 @@ public class MainView {
     private Tab buildPerformanceTab() {
         FlowPane pane = buildPane();
         pane.getChildren().addAll(
-                buildButton("Disk Cleanup", "cleanmgr", false, "Opens Windows disk cleanup utility"),
-                buildButton("Clear Temp Files", "del /q /f /s %TEMP%\\*", false, "Deletes all files in your temp folder"),
-                buildButton("Stop Windows Update", "net stop wuauserv", false, "Stops the Windows Update service"),
-                buildButton("Start Windows Update", "net start wuauserv", false, "Starts the Windows Update service")
+                buildButton("Disk Cleanup", "cleanmgr", "Opens Windows disk cleanup utility"),
+                buildButton("Clear Temp Files", "del /q /f /s %TEMP%\\*", "Deletes all files in your temp folder"),
+                buildButton("Stop Windows Update", "net stop wuauserv", "Stops the Windows Update service"),
+                buildButton("Start Windows Update", "net start wuauserv", "Starts the Windows Update service")
         );
         return new Tab("Performance", pane);
     }
@@ -76,25 +85,19 @@ public class MainView {
     private Tab buildInfoTab() {
         FlowPane pane = buildPane();
         pane.getChildren().addAll(
-                buildButton("System Info", "systeminfo", false, "Shows detailed hardware and OS information"),
-                buildButton("Windows Version", "winver", false, "Shows your current Windows version"),
-                buildButton("Task List", "tasklist", false, "Lists all currently running processes"),
-                buildButton("Driver List", "driverquery", false, "Lists all installed device drivers")
+                buildButton("System Info", "systeminfo", "Shows detailed hardware and OS information"),
+                buildButton("Windows Version", "winver", "Shows your current Windows version"),
+                buildButton("Task List", "tasklist", "Lists all currently running processes"),
+                buildButton("Driver List", "driverquery", "Lists all installed device drivers")
         );
         return new Tab("Info", pane);
     }
 
-    private Button buildButton(String label, String command, boolean isPowershell, String description) {
+    private Button buildButton(String label, String command, String description) {
         Button btn = new Button(label);
         btn.setPrefWidth(160);
         btn.setTooltip(new Tooltip(description));
-        btn.setOnAction(e -> {
-            if (isPowershell) {
-                CommandService.runPowershellCommand(command, output);
-            } else {
-                CommandService.runCMDcommand(command, output);
-            }
-        });
+        btn.setOnAction(e -> CommandService.runCMDcommand(command, output));
         return btn;
     }
 

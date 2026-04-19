@@ -27,11 +27,18 @@ public class CommandService {
         runCommand(command, output, buildprocess("powershell.exe", "-Command",command));
     }
 
+    public static void runPowershellScript(String scriptPath, TextArea output) {
+        runCommand(scriptPath, output,
+                new ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Bypass", "-File", scriptPath));
+    }
+
     public static void runCMDcommand(String command, TextArea output){
         runCommand(command, output, buildprocess("cmd.exe", "/c",command));
     }
     public static void runCommand(String command, TextArea output,ProcessBuilder pb) {
         queueSize.set(queue.getQueue().size());
+        output.clear();
+        output.appendText("Command started, waiting for output...\n");
         queue.submit(() -> {
             Platform.runLater(() -> queueSize.set(queue.getQueue().size()));
             try {
@@ -40,13 +47,16 @@ public class CommandService {
                         new InputStreamReader(p.getInputStream())
                 );
                 StringBuilder batch = new StringBuilder();
+                long lastFlush = System.currentTimeMillis();
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    batch.append(line).append("\n");
-                    if (batch.length() > 500) {
+                    batch.append(line.trim()).append("\n");
+                    long now = System.currentTimeMillis();
+                    if (batch.length() > 2000 || now - lastFlush > 700) {
                         String out = batch.toString();
                         Platform.runLater(() -> output.appendText(out));
                         batch.setLength(0);
+                        lastFlush = now;
                     }
                 }
                 if (batch.length() > 0) {
