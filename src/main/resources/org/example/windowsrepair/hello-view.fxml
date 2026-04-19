@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="700.0" prefWidth="980.0" spacing="14.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.windowsrepair.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <TabPane prefHeight="500.0" prefWidth="940.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab closable="false" text="Windows Repair">
+                <content>
+                    <ScrollPane fitToWidth="true" prefHeight="420.0" prefWidth="920.0">
+                        <content>
+                            <VBox spacing="10.0">
+                                <padding>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                                </padding>
+                                <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onSFCClick" prefWidth="260.0" text="sfc /scannow" />
+                                            <Label text="Scans and repairs corrupted system files." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onReregisterClick" prefWidth="260.0" text="Re-register all Windows apps" />
+                                            <Label text="Re-registers all built-in Windows app packages." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onDISMClick" prefWidth="260.0" text="DISM RestoreHealth" />
+                                            <Label text="Repairs the Windows image, heavier than SFC." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onChkdskClick" prefWidth="260.0" text="chkdsk C: /f /r" />
+                                            <Label text="Checks disk for errors and bad sectors (typically needs reboot)." />
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+                </content>
+            </Tab>
+
+            <Tab closable="false" text="Network">
+                <content>
+                    <ScrollPane fitToWidth="true" prefHeight="420.0" prefWidth="920.0">
+                        <content>
+                            <VBox spacing="10.0">
+                                <padding>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                                </padding>
+                                <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onFlushDnsClick" prefWidth="260.0" text="ipconfig /flushdns" />
+                                            <Label text="Clears DNS cache; can fix website loading issues." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onWinsockResetClick" prefWidth="260.0" text="netsh winsock reset" />
+                                            <Label text="Resets Windows network stack." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onTcpIpResetClick" prefWidth="260.0" text="netsh int ip reset" />
+                                            <Label text="Resets TCP/IP settings." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onReleaseIpClick" prefWidth="260.0" text="ipconfig /release" />
+                                            <Label text="Releases the current IP address." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onRenewIpClick" prefWidth="260.0" text="ipconfig /renew" />
+                                            <Label text="Requests a new IP address." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onIpConfigAllClick" prefWidth="260.0" text="ipconfig /all" />
+                                            <Label text="Shows full network configuration details." />
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+                </content>
+            </Tab>
+
+            <Tab closable="false" text="Performance">
+                <content>
+                    <ScrollPane fitToWidth="true" prefHeight="420.0" prefWidth="920.0">
+                        <content>
+                            <VBox spacing="10.0">
+                                <padding>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                                </padding>
+                                <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onCleanmgrClick" prefWidth="260.0" text="cleanmgr" />
+                                            <Label text="Opens Disk Cleanup." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onClearTempClick" prefWidth="260.0" text="del /q /f /s %TEMP%\*" />
+                                            <Label text="Clears files from the TEMP directory." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onStopWuauservClick" prefWidth="260.0" text="net stop wuauserv" />
+                                            <Label text="Stops Windows Update service." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onStartWuauservClick" prefWidth="260.0" text="net start wuauserv" />
+                                            <Label text="Starts Windows Update service." />
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+                </content>
+            </Tab>
+
+            <Tab closable="false" text="Info">
+                <content>
+                    <ScrollPane fitToWidth="true" prefHeight="420.0" prefWidth="920.0">
+                        <content>
+                            <VBox spacing="10.0">
+                                <padding>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                                </padding>
+                                <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onSystemInfoClick" prefWidth="260.0" text="systeminfo" />
+                                            <Label text="Shows detailed system information." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onWinverClick" prefWidth="260.0" text="winver" />
+                                            <Label text="Shows Windows version dialog." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onTasklistClick" prefWidth="260.0" text="tasklist" />
+                                            <Label text="Lists running processes." />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <children>
+                                            <Button onAction="#onDriverqueryClick" prefWidth="260.0" text="driverquery" />
+                                            <Label text="Lists installed device drivers." />
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
+
+    <TextArea fx:id="outputTextArea" prefHeight="220.0" prefWidth="940.0" wrapText="true" />
+    <HBox alignment="TOP_CENTER" prefHeight="38.0" prefWidth="934.0">
+        <children>
+            <Label fx:id="statusLabel" alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="36.0" prefWidth="220.0" text="Ready" />
+        </children>
+    </HBox>
+</VBox>
